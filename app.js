@@ -3,9 +3,9 @@ const express = require('express')
 
 const app = express()
 
-app.get('/', (req, res) => {
-  res.send('Servidor rodando com ExpressJS')
-})
+const index = require('./src/routes/index')
+
+app.use('/', index)
 
 http
   .createServer(app)
