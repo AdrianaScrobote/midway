@@ -16,6 +16,7 @@
         "dot-notation": 0,
         "no-console": "off",
         "no-return-await": "off",
-        "class-methods-use-this": "off"
+        "class-methods-use-this": "off",
+        "no-plusplus": "off"
     }
 }

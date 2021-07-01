@@ -8,10 +8,20 @@ const productService = new ProductService()
 router.get('/product/', async (req, res) => {
   try {
     const products = await productService.getProducts()
-    return res.json(products)
+    res.json(products)
   } catch (error) {
     console.log(error)
-    return res.status(500).json({ message: error.toString() })
+    res.status(500).json({ message: error.toString() })
+  }
+})
+
+router.delete('/product/remove-duplicates', async (req, res) => {
+  try {
+    const products = await productService.removeDuplicatesAndUpdateStock()
+    res.json(products)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json(error.toString())
   }
 })
 
