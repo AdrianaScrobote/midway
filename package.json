@@ -1,0 +1,26 @@
+{
+  "name": "test-midway",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslit": "^6.0.0",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.8",
+    "prettier": "^2.3.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.29.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.23.4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon -L app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
