@@ -9,6 +9,10 @@ module.exports = class ProductService {
     return await this.productModel.getProducts()
   }
 
+  async getProduct(id) {
+    return await this.productModel.getProduct(id)
+  }
+
   async removeDuplicatesAndUpdateStock() {
     const productsDuplicates =
       await this.productModel.getDuplicatesWithSumStock()
@@ -18,12 +22,16 @@ module.exports = class ProductService {
 
       await Promise.all(
         productsDuplicates.map(async (item) => {
-          await this.productModel.updateStockOfProduct(item.id, item.estoque)
+          await this.productModel.updateProductStock(item.id, item.estoque)
           return item
         })
       )
     }
 
     return await this.getProducts()
+  }
+
+  async updateProductStock(id, qtyStock) {
+    return await this.productModel.updateProductStock(id, qtyStock)
   }
 }

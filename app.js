@@ -5,6 +5,7 @@ const app = express()
 
 const index = require('./src/routes/index')
 
+app.use(express.json())
 app.use('/', index)
 
 http

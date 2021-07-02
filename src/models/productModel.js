@@ -5,6 +5,23 @@ module.exports = class ProductModel {
     return database.query('select * from produto order by id')
   }
 
+  getProduct(id) {
+    return database.query(`
+      select 
+        id,
+        estoque,
+        "dataCadastro",
+        nome,
+        tamanho,
+        tipo,
+        descricao 
+      from produto 
+      where 
+        id = ${id}
+        and estoque > 0
+    `)
+  }
+
   getDuplicatesWithSumStock() {
     return database.query(`
       select 
@@ -24,7 +41,7 @@ module.exports = class ProductModel {
     `)
   }
 
-  updateStockOfProduct(id, qtyStock) {
+  updateProductStock(id, qtyStock) {
     return database.query(`
       update produto set "dataAtualizacao" = now(), estoque = ${qtyStock} where id = ${id}
     `)

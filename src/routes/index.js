@@ -1,12 +1,15 @@
 const express = require('express')
 
-let router = express.Router()
-const productRoute = require('./productRoute')
+const router = express.Router()
 
-router = Object.assign(router, productRoute)
+const productRoute = require('./productRoute')
+const saleRoute = require('./saleRoute')
 
 router.get('/', (req, res) => {
   res.send('Servidor rodando com ExpressJS')
 })
+
+router.use('/product', productRoute)
+router.use('/sale', saleRoute)
 
 module.exports = router

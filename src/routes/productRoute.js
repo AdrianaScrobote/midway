@@ -5,7 +5,7 @@ const ProductService = require('../services/productService')
 
 const productService = new ProductService()
 
-router.get('/product/', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const products = await productService.getProducts()
     res.json(products)
@@ -15,13 +15,13 @@ router.get('/product/', async (req, res) => {
   }
 })
 
-router.delete('/product/remove-duplicates', async (req, res) => {
+router.delete('/remove-duplicates', async (req, res) => {
   try {
     const products = await productService.removeDuplicatesAndUpdateStock()
     res.json(products)
   } catch (error) {
     console.log(error)
-    res.status(500).json(error.toString())
+    res.status(500).json({ message: error.toString() })
   }
 })
 
