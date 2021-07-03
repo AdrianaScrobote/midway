@@ -18,6 +18,7 @@
         "no-return-await": "off",
         "class-methods-use-this": "off",
         "no-plusplus": "off",
-        "prefer-destructuring": "off"
+        "prefer-destructuring": "off",
+        "no-param-reassign": "off"
     }
 }

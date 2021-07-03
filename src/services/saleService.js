@@ -1,8 +1,9 @@
 const ProductService = require('./productService')
 const SaleModel = require('../models/saleModel')
 const validator = require('../helpers/validator')
+const date = require('../helpers/date')
 
-const MIN_STOCK_PRODUCT = 1
+const MIN_PRODUCT_STOCK = 1
 const MIN_SIZE_ARRAY = 1
 
 module.exports = class SaleService {
@@ -11,44 +12,19 @@ module.exports = class SaleService {
     this.saleModel = new SaleModel()
   }
 
-  async saleProduct(body) {
+  async saleProduct(params) {
     const result = {}
-    let dataVenda
-    let cpf
 
-    if (!body.idProduto) {
-      throw new Error('informe o parâmetro idProduto')
-    } else if (!validator.isValidNumber(body.idProduto)) {
-      throw new Error(`o parâmetro idProduto deve ser um valor numérico!`)
-    }
+    this.validParamsSaleProduct(params)
 
-    if (!body.dataVenda) {
-      throw new Error('informe o parâmetro dataVenda')
-    } else {
-      dataVenda = validator.getDatetimeString(body.dataVenda)
-
-      if (!dataVenda) {
-        throw new Error('o parâmetro dataVenda é inválido!')
-      }
-    }
-
-    if (!body.cpf) {
-      throw new Error('informe o parâmetro cpf')
-    } else {
-      cpf = body.cpf.replace(/[.-\s]+/g, '')
-      if (!validator.isValidNumber(cpf)) {
-        throw new Error(`o parâmetro cpf é inválido!`)
-      }
-    }
-
-    let product = await this.productService.getProduct(body.idProduto)
+    let product = await this.productService.getProduct(params.idProduto)
 
     if (
       product.length < MIN_SIZE_ARRAY ||
-      product[0].estoque < MIN_STOCK_PRODUCT
+      product[0].estoque < MIN_PRODUCT_STOCK
     ) {
       throw new Error(
-        `o idProduto ${body.idProduto} não está disponível no estoque!`
+        `o idProduto ${params.idProduto} não está disponível no estoque!`
       )
     }
 
@@ -56,22 +32,33 @@ module.exports = class SaleService {
 
     if (
       !validator.isValidDifferenceDates(
-        new Date(dataVenda),
-        new Date(product.dataCadastro)
+        new Date(params.dataVenda),
+        date.getLocalDate(product.dataCadastro)
       )
     ) {
       throw new Error(
-        `o idProduto ${body.idProduto} não estava à venda na data ${body.dataVenda}!`
+        `o idProduto ${params.idProduto} não estava à venda na data informada!`
       )
     }
 
+    const currentDate = new Date()
+
+    if (
+      !validator.isValidDifferenceDates(
+        date.getLocalDate(currentDate),
+        new Date(params.dataVenda)
+      )
+    ) {
+      throw new Error(`a data de venda deve ser menor do que a data atual!`)
+    }
+
     const qtyStock = product.estoque - 1
-    await this.productService.updateProductStock(body.idProduto, qtyStock)
+    await this.productService.updateProductStock(params.idProduto, qtyStock)
 
     const taxInvoice = await this.saleModel.generateTaxInvoice(
-      body.idProduto,
-      cpf,
-      dataVenda
+      params.idProduto,
+      params.cpf,
+      params.dataVenda
     )
 
     if (taxInvoice.length >= MIN_SIZE_ARRAY) {
@@ -86,5 +73,32 @@ module.exports = class SaleService {
     }
 
     return result
+  }
+
+  validParamsSaleProduct(params) {
+    if (!params.idProduto) {
+      throw new Error('informe o parâmetro idProduto')
+    } else if (!validator.isValidNumber(params.idProduto)) {
+      throw new Error(`o parâmetro idProduto deve ser um valor numérico!`)
+    }
+
+    if (!params.dataVenda) {
+      throw new Error('informe o parâmetro dataVenda')
+    } else {
+      params.dataVenda = validator.getDatetimeString(params.dataVenda)
+
+      if (!params.dataVenda) {
+        throw new Error('o parâmetro dataVenda é inválido!')
+      }
+    }
+
+    if (!params.cpf) {
+      throw new Error('informe o parâmetro cpf')
+    } else {
+      params.cpf = params.cpf.replace(/[.-\s]+/g, '')
+      if (!validator.isValidNumber(params.cpf)) {
+        throw new Error(`o parâmetro cpf é inválido!`)
+      }
+    }
   }
 }

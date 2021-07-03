@@ -15,6 +15,9 @@ exports.getDatetimeString = (datetimeString) => {
   }
 
   let datetime = new Date(datetimeString)
+  datetime = new Date(
+    datetime.getTime() - datetime.getTimezoneOffset() * 60 * 1000
+  )
   datetime = datetime.toISOString()
 
   let date = datetime.split('T')
