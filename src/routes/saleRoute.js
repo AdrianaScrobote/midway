@@ -10,8 +10,7 @@ router.post('/', async (req, res) => {
     const result = await saleService.saleProduct(req.body)
     res.json(result)
   } catch (error) {
-    console.log(error)
-    res.status(500).json({ message: error.toString() })
+    res.status(error.status || 500).json({ message: error.toString() })
   }
 })
 
@@ -20,8 +19,7 @@ router.patch('/cancellation', async (req, res) => {
     const result = await saleService.cancelSaleProduct(req.body)
     res.json(result)
   } catch (error) {
-    console.log(error)
-    res.status(500).json({ message: error.toString() })
+    res.status(error.status || 500).json({ message: error.toString() })
   }
 })
 

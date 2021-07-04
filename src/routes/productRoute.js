@@ -10,8 +10,7 @@ router.get('/', async (req, res) => {
     const products = await productService.getProducts()
     res.json(products)
   } catch (error) {
-    console.log(error)
-    res.status(500).json({ message: error.toString() })
+    res.status(error.status || 500).json({ message: error.toString() })
   }
 })
 
@@ -20,8 +19,7 @@ router.delete('/remove-duplicates', async (req, res) => {
     const products = await productService.removeDuplicatesAndUpdateStock()
     res.json(products)
   } catch (error) {
-    console.log(error)
-    res.status(500).json({ message: error.toString() })
+    res.status(error.status || 500).json({ message: error.toString() })
   }
 })
 

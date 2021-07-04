@@ -1,10 +1,10 @@
+const createError = require('http-errors')
 const ProductService = require('./productService')
 const SaleModel = require('../models/saleModel')
 const validator = require('../helpers/validator')
 const date = require('../helpers/date')
 
 const MIN_PRODUCT_STOCK = 1
-const MIN_SIZE_ARRAY = 1
 
 module.exports = class SaleService {
   constructor() {
@@ -20,11 +20,9 @@ module.exports = class SaleService {
     params.hasStock = true
     let product = await this.productService.getProduct(params)
 
-    if (
-      product.length < MIN_SIZE_ARRAY ||
-      product[0].estoque < MIN_PRODUCT_STOCK
-    ) {
-      throw new Error(
+    if (product.length < 1 || product[0].estoque < MIN_PRODUCT_STOCK) {
+      throw createError(
+        400,
         `o idProduto ${params.idProduto} não está disponível no estoque!`
       )
     }
@@ -37,7 +35,8 @@ module.exports = class SaleService {
         date.getLocalDate(product.dataCadastro)
       )
     ) {
-      throw new Error(
+      throw createError(
+        400,
         `o idProduto ${params.idProduto} não estava à venda na data informada!`
       )
     }
@@ -50,7 +49,10 @@ module.exports = class SaleService {
         new Date(params.dataVenda)
       )
     ) {
-      throw new Error(`a data de venda deve ser menor do que a data atual!`)
+      throw createError(
+        400,
+        `a data de venda deve ser menor do que a data atual!`
+      )
     }
 
     const qtyStock = product.estoque - 1
@@ -62,7 +64,7 @@ module.exports = class SaleService {
       params.dataVenda
     )
 
-    if (taxInvoice.length >= MIN_SIZE_ARRAY) {
+    if (taxInvoice.length > 0) {
       result['idProduto'] = product.id
       result['nome'] = product.nome
       result['tamanho'] = product.tamanho
@@ -78,27 +80,32 @@ module.exports = class SaleService {
 
   validParamsSaleProduct(params) {
     if (!params.idProduto) {
-      throw new Error('informe o parâmetro idProduto')
+      throw createError(400, `informe o parâmetro idProduto!`)
     } else if (!validator.isValidNumber(params.idProduto)) {
-      throw new Error(`o parâmetro idProduto deve ser um valor numérico!`)
+      throw createError(
+        400,
+        `o parâmetro idProduto deve ser um valor numérico!`
+      )
     }
 
     if (!params.dataVenda) {
-      throw new Error('informe o parâmetro dataVenda')
+      throw createError(400, `informe o parâmetro dataVenda!`)
     } else {
-      params.dataVenda = validator.getDatetimeString(params.dataVenda)
-
-      if (!params.dataVenda) {
-        throw new Error('o parâmetro dataVenda é inválido!')
+      if (!validator.isValidDatetimeString(params.dataVenda)) {
+        throw createError(400, `o parâmetro dataVenda é inválido!`)
       }
+
+      let dataVenda = new Date(params.dataVenda)
+      dataVenda = date.getLocalDate(dataVenda)
+      params.dataVenda = dataVenda.toISOString()
     }
 
     if (!params.cpf) {
-      throw new Error('informe o parâmetro cpf')
+      throw createError(400, `informe o parâmetro cpf!`)
     } else {
       params.cpf = params.cpf.replace(/[.-\s]+/g, '')
       if (!validator.isValidNumber(params.cpf)) {
-        throw new Error(`o parâmetro cpf é inválido!`)
+        throw createError(400, `o parâmetro cpf é inválido!`)
       }
     }
   }
@@ -112,14 +119,15 @@ module.exports = class SaleService {
       params.cpf
     )
 
-    if (getTaxInvoice.length < MIN_SIZE_ARRAY) {
-      throw new Error(
+    if (getTaxInvoice.length < 1) {
+      throw createError(
+        400,
         `a nota fiscal não foi encontrada! Por favor, verifique as informações enviadas!`
       )
     }
 
     if (getTaxInvoice[0].status === 'Cancelado') {
-      throw new Error(`a nota fiscal informada já foi cancelada!`)
+      throw createError(400, `a nota fiscal informada já foi cancelada!`)
     }
 
     await this.saleModel.cancelTaxInvoice(params.idNotaFiscal)
@@ -129,29 +137,32 @@ module.exports = class SaleService {
     const qtyStock = product[0].estoque + 1
     await this.productService.updateProductStock(params.idProduto, qtyStock)
 
-    return { msg: 'A venda do produto foi cancelada com sucesso!' }
+    return { message: 'A venda do produto foi cancelada com sucesso!' }
   }
 
   validParamsCancelSaleProduct(params) {
     if (!params.idProduto) {
-      throw new Error('informe o parâmetro idProduto')
+      throw createError(400, `informe o parâmetro idProduto!`)
     } else if (!validator.isValidNumber(params.idProduto)) {
-      throw new Error(`o parâmetro idProduto deve ser um valor numérico!`)
+      throw createError(
+        400,
+        `o parâmetro idProduto deve ser um valor numérico!`
+      )
     }
 
     if (!params.cpf) {
-      throw new Error('informe o parâmetro cpf')
+      throw createError(400, `informe o parâmetro cpf!`)
     } else {
       params.cpf = params.cpf.replace(/[.-\s]+/g, '')
       if (!validator.isValidNumber(params.cpf)) {
-        throw new Error(`o parâmetro cpf é inválido!`)
+        throw createError(400, `o parâmetro cpf é inválido!`)
       }
     }
 
     if (!params.idNotaFiscal) {
-      throw new Error('informe o parâmetro idNotaFiscal')
+      throw createError(400, `informe o parâmetro idNotaFiscal!`)
     } else if (!validator.isValidUUID(params.idNotaFiscal)) {
-      throw new Error(`o parâmetro idNotaFiscal é inválido!`)
+      throw createError(400, `o parâmetro idNotaFiscal é inválido!`)
     }
   }
 }

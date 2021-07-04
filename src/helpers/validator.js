@@ -1,3 +1,5 @@
+const createError = require('http-errors')
+
 exports.isValidNumber = (number) => {
   const result = /^(\d+)$/.test(number)
   return result
@@ -12,12 +14,13 @@ exports.isValidUUID = (uuid) => {
   return result
 }
 
-exports.getDatetimeString = (datetimeString) => {
+exports.isValidDatetimeString = (datetimeString) => {
   if (
     !/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/.test(datetimeString)
   ) {
-    throw new Error(
-      `o valor ${datetimeString} é inválido. Por favor envie no formato YYYY-MM-DD hh:mm:ss`
+    throw createError(
+      400,
+      `o valor ${datetimeString} é inválido. Por favor envie no formato YYYY-MM-DD hh:mm:ss!`
     )
   }
 
@@ -34,7 +37,7 @@ exports.getDatetimeString = (datetimeString) => {
   dateString = dateString[0]
 
   if (date === dateString) {
-    return datetime
+    return true
   }
 
   return false

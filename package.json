@@ -1,5 +1,5 @@
 {
-  "name": "test-midway",
+  "name": "midway",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,6 +9,7 @@
     "eslint-plugin-prettier": "^3.4.0",
     "eslit": "^6.0.0",
     "express": "^4.17.1",
+    "http-errors": "^1.8.0",
     "nodemon": "^2.0.8",
     "pg-promise": "^10.10.2",
     "prettier": "^2.3.2",
