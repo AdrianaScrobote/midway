@@ -25,4 +25,27 @@ module.exports = class SaleModel {
     `
     return database.query(sql)
   }
+
+  cancelTaxInvoice(id) {
+    return database.query(`
+      update nota_fiscal 
+      set 
+        status = 'Cancelado', 
+        "dataAtualizacao" = now() 
+      where id = '${id}'
+    `)
+  }
+
+  getTaxInvoice(idNotaFiscal, idProduto, cpf) {
+    return database.query(`
+      select 
+        id,
+        status
+      from nota_fiscal 
+      where 
+        id = '${idNotaFiscal}' 
+        and "idProduto" = ${idProduto} 
+        and cpf = '${cpf}'
+    `)
+  }
 }

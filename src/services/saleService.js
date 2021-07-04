@@ -17,7 +17,8 @@ module.exports = class SaleService {
 
     this.validParamsSaleProduct(params)
 
-    let product = await this.productService.getProduct(params.idProduto)
+    params.hasStock = true
+    let product = await this.productService.getProduct(params)
 
     if (
       product.length < MIN_SIZE_ARRAY ||
@@ -99,6 +100,58 @@ module.exports = class SaleService {
       if (!validator.isValidNumber(params.cpf)) {
         throw new Error(`o parâmetro cpf é inválido!`)
       }
+    }
+  }
+
+  async cancelSaleProduct(params) {
+    this.validParamsCancelSaleProduct(params)
+
+    const getTaxInvoice = await this.saleModel.getTaxInvoice(
+      params.idNotaFiscal,
+      params.idProduto,
+      params.cpf
+    )
+
+    if (getTaxInvoice.length < MIN_SIZE_ARRAY) {
+      throw new Error(
+        `a nota fiscal não foi encontrada! Por favor, verifique as informações enviadas!`
+      )
+    }
+
+    if (getTaxInvoice[0].status === 'Cancelado') {
+      throw new Error(`a nota fiscal informada já foi cancelada!`)
+    }
+
+    await this.saleModel.cancelTaxInvoice(params.idNotaFiscal)
+
+    const product = await this.productService.getProduct(params)
+
+    const qtyStock = product[0].estoque + 1
+    await this.productService.updateProductStock(params.idProduto, qtyStock)
+
+    return { msg: 'A venda do produto foi cancelada com sucesso!' }
+  }
+
+  validParamsCancelSaleProduct(params) {
+    if (!params.idProduto) {
+      throw new Error('informe o parâmetro idProduto')
+    } else if (!validator.isValidNumber(params.idProduto)) {
+      throw new Error(`o parâmetro idProduto deve ser um valor numérico!`)
+    }
+
+    if (!params.cpf) {
+      throw new Error('informe o parâmetro cpf')
+    } else {
+      params.cpf = params.cpf.replace(/[.-\s]+/g, '')
+      if (!validator.isValidNumber(params.cpf)) {
+        throw new Error(`o parâmetro cpf é inválido!`)
+      }
+    }
+
+    if (!params.idNotaFiscal) {
+      throw new Error('informe o parâmetro idNotaFiscal')
+    } else if (!validator.isValidUUID(params.idNotaFiscal)) {
+      throw new Error(`o parâmetro idNotaFiscal é inválido!`)
     }
   }
 }

@@ -1,8 +1,15 @@
 exports.isValidNumber = (number) => {
-  if (!/^(\d+)$/.test(number)) {
-    return false
-  }
-  return true
+  const result = /^(\d+)$/.test(number)
+  return result
+}
+
+exports.isValidUUID = (uuid) => {
+  const result =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(
+      uuid
+    )
+
+  return result
 }
 
 exports.getDatetimeString = (datetimeString) => {

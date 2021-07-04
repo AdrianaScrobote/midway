@@ -5,8 +5,8 @@ module.exports = class ProductModel {
     return database.query('select * from produto order by id')
   }
 
-  getProduct(id) {
-    return database.query(`
+  getProduct(params) {
+    let sql = `
       select 
         id,
         estoque,
@@ -17,9 +17,15 @@ module.exports = class ProductModel {
         descricao 
       from produto 
       where 
-        id = ${id}
+        id = ${params.idProduto}
+    `
+
+    if (params.hasStock) {
+      sql += `
         and estoque > 0
-    `)
+      `
+    }
+    return database.query(sql)
   }
 
   getDuplicatesWithSumStock() {

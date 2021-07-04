@@ -15,4 +15,14 @@ router.post('/', async (req, res) => {
   }
 })
 
+router.patch('/cancellation', async (req, res) => {
+  try {
+    const result = await saleService.cancelSaleProduct(req.body)
+    res.json(result)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ message: error.toString() })
+  }
+})
+
 module.exports = router

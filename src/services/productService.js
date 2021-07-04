@@ -9,8 +9,8 @@ module.exports = class ProductService {
     return await this.productModel.getProducts()
   }
 
-  async getProduct(id) {
-    return await this.productModel.getProduct(id)
+  async getProduct(params) {
+    return await this.productModel.getProduct(params)
   }
 
   async removeDuplicatesAndUpdateStock() {
