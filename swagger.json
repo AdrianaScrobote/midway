@@ -1,0 +1,116 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Midway",
+        "description": "Documentação da API MIdway",
+        "version": "1.0.0"
+    },
+    "basePath": "/",
+    "paths": {
+        "/product/": {
+            "get": {
+                "tags": ["product"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Ok"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/product/remove-duplicates/": {
+            "delete": {
+                "tags": ["product"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Ok"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/sale/": {
+            "post": {
+                "tags": ["sale"],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "dataVenda": {
+                                        "type": "string"
+                                    },
+                                    "idProduto": {
+                                        "type": "integer"
+                                    },
+                                    "cpf": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "dataVenda": "2021-07-03 17:44:00",
+                                    "idProduto": 1,
+                                    "cpf": "095.900.739-30"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Venda criada"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/sale/cancellation/": {
+            "patch": {
+                "tags": ["sale"],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "idNotaFiscal": {
+                                        "type": "string",
+                                        "format": "uuid"
+                                    },
+                                    "idProduto": {
+                                        "type": "integer"
+                                    },
+                                    "cpf": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "idNotaFiscal": "02abeb71-45e4-48b0-9b36-db2baf5b2c0f",
+                                    "idProduto": 1,
+                                    "cpf": "095.900.739-30"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Venda cancelada"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        }
+    }
+}
