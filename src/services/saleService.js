@@ -72,7 +72,7 @@ module.exports = class SaleService {
       result['descricao'] = product.descricao
       result['cpf'] = taxInvoice[0].cpf
       result['idNotaFiscal'] = taxInvoice[0].idNotaFiscal
-      result['dataVenda'] = taxInvoice[0].dataVenda
+      result['dataVenda'] = date.getLocalDate(taxInvoice[0].dataVenda)
     }
 
     return result

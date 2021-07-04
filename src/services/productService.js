@@ -1,4 +1,5 @@
 const ProductModel = require('../models/productModel')
+const date = require('../helpers/date')
 
 module.exports = class ProductService {
   constructor() {
@@ -6,7 +7,17 @@ module.exports = class ProductService {
   }
 
   async getProducts() {
-    return await this.productModel.getProducts()
+    const products = await this.productModel.getProducts()
+
+    products.map((item) => {
+      item.dataCadastro = date.getLocalDate(item.dataCadastro)
+      item.dataAtualizacao = item.dataAtualizacao
+        ? date.getLocalDate(item.dataAtualizacao)
+        : null
+      return item
+    })
+
+    return products
   }
 
   async getProduct(params) {
