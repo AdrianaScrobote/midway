@@ -32,21 +32,25 @@ Foi criada uma API backend, com endpoints para remover produtos duplicados no es
 
 ### Endpoints criados:
 
-Método: get
-Endpoint: /product/
-Descrição: retorna todos os produtos cadastrados no banco.
+- Método: get. Endpoint: /product/
+  Descrição: retorna todos os produtos cadastrados no banco.
 
-Método: delete
-Endpoint: /product/remove-duplicates/
-Descrição: remove todos os produtos duplicados a atualiza o estoque.
+---
 
-Método: post
-Endpoint: /sale/
-Descrição: realiza uma venda e gera nota fiscal.
+- Método: delete. Endpoint: /product/remove-duplicates/
+  Descrição: remove todos os produtos duplicados a atualiza quantidade de estoque.
 
-Método: patch
-Endpoint: /sale/cancellation/
-Descrição: realiza o cancelamento de uma venda.
+---
+
+- Método: post. Endpoint: /sale/
+  Descrição: realiza uma venda e gera nota fiscal.
+
+---
+
+- Método: patch. Endpoint: /sale/cancellation/
+  Descrição: realiza o cancelamento de uma venda.
+
+---
 
 ### Como rodar os testes?
 
