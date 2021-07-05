@@ -9,6 +9,7 @@
     "paths": {
         "/product/": {
             "get": {
+                "summary": "Retorna uma lista com todos os produtos.",
                 "tags": ["product"],
                 "parameters": [],
                 "responses": {
@@ -26,6 +27,7 @@
         },
         "/product/remove-duplicates/": {
             "delete": {
+                "summary": "Remove os produtos duplicados e atualiza o estoque.",
                 "tags": ["product"],
                 "parameters": [],
                 "responses": {
@@ -43,6 +45,7 @@
         },
         "/sale/": {
             "post": {
+                "summary": "Realiza uma venda e gera nota fiscal.",
                 "tags": ["sale"],
                 "requestBody": {
                     "content": {
@@ -84,6 +87,7 @@
         },
         "/sale/cancellation/": {
             "patch": {
+                "summary": "Realiza o cancelamento de uma venda.",
                 "tags": ["sale"],
                 "requestBody": {
                     "content": {
