@@ -1,6 +1,5 @@
 # midway
 
-Desafio realizado para o cargo de Desenvolvedora Pleno na Midway.
 Foi criada uma API backend, com endpoints para remover produtos duplicados no estoque, vender produto e cancelar venda.
 
 ### Como rodar localmente?
